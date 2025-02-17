@@ -1,26 +1,152 @@
-/* eslint-disable max-len */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserWarning } from './UserWarning';
+import { addTodo, deleteTodo, getTodos, USER_ID } from './api/todos';
+import { TodoError } from './components/TodoError';
+import { TodoFooter } from './components/TodoFooter';
+import { TodoSection } from './components/TodoSection';
+import { TodoHeader } from './components/TodoHeader';
+import { Todo } from './types/Todo';
 
-const USER_ID = 0;
+interface AppProp {
+  todoId: number;
+}
 
-export const App: React.FC = () => {
+export const App: React.FC<AppProp> = () => {
+  //#region State//
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [queryTodo, setQueryTodo] = useState<string>('');
+  const [filter, setFilter] = useState<'active' | 'all' | 'completed'>('all');
+  const [tempTodo, setTempTodo] = useState<Todo | null>(null);
+  //#endregion//
+
+  //#region HandleTodo//
+
+  const handleAddTodo = async (title: string) => {
+    const trimmedTitle = title.trim();
+
+    if (!trimmedTitle) {
+      setError('Title should not be empty');
+
+      return;
+    }
+
+    setTempTodo({
+      id: 0,
+      title: trimmedTitle,
+      completed: false,
+      userId: USER_ID,
+    });
+
+    try {
+      const newTodo = await addTodo({
+        title: trimmedTitle,
+        completed: false,
+        userId: USER_ID,
+      });
+
+      setTodos([...todos, newTodo]);
+      setQueryTodo('');
+      setTempTodo(null);
+    } catch (e) {
+      setError('Unable to add a todo');
+      setTempTodo(null);
+    }
+  };
+
+  const handleDeleteTodo = async (todoId: number) => {
+    try {
+      await deleteTodo(todoId);
+      setTodos(todos.filter(todo => todo.id !== todoId));
+    } catch (e) {
+      setError('Unable to delete a todo');
+    }
+  };
+
+  const handleClearCompleted = async () => {
+    const completedTodos = todos.filter(todo => todo.completed);
+
+    try {
+      await Promise.all(completedTodos.map(todo => deleteTodo(todo.id)));
+      setTodos(todos.filter(todo => !todo.completed));
+    } catch (e) {
+      setError('Unable to delete completed todos');
+    }
+  };
+  //#endregion//
+
+  //#region filteredTodos//
+  const filteredTodos = todos.filter(todo => {
+    if (filter === 'active') {
+      return !todo.completed;
+    }
+
+    if (filter === 'completed') {
+      return todo.completed;
+    }
+
+    return true;
+  });
+
+  const todoLeft = todos.filter(todo => !todo.completed).length;
+  //#endregion//
+
+  const noTodo = todos.length === 0;
+
+  useEffect(() => {
+    if (USER_ID) {
+      getTodos()
+        .then(data => {
+          setTodos(data);
+          setLoading(false);
+        })
+        .catch(() => {
+          setError('Unable to load todos');
+          setLoading(false);
+        });
+    }
+  }, []);
+
   if (!USER_ID) {
     return <UserWarning />;
   }
 
   return (
-    <section className="section container">
-      <p className="title is-4">
-        Copy all you need from the prev task:
-        <br />
-        <a href="https://github.com/mate-academy/react_todo-app-loading-todos#react-todo-app-load-todos">
-          React Todo App - Load Todos
-        </a>
-      </p>
+    <div className="todoapp">
+      <h1 className="todoapp__title">todos</h1>
 
-      <p className="subtitle">Styles are already copied</p>
-    </section>
+      <div className="todoapp__content">
+        <TodoHeader
+          handleAddTodo={handleAddTodo}
+          setQueryTodo={setQueryTodo}
+          queryTodo={queryTodo}
+          error={error}
+          setError={setError}
+        />
+        {loading ? (
+          <div></div>
+        ) : (
+          <TodoSection
+            todos={filteredTodos}
+            handleDeleteTodo={() => handleDeleteTodo}
+            tempTodo={tempTodo}
+          />
+        )}
+        {!noTodo && (
+          <TodoFooter
+            todos={todos}
+            handleClearCompleted={handleClearCompleted}
+            filter={filter}
+            setFilter={setFilter}
+            todoLeft={todoLeft}
+          />
+        )}
+      </div>
+
+      <TodoError error={error} setError={setError} />
+    </div>
   );
 };
