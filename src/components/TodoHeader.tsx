@@ -4,6 +4,7 @@ interface TodoHeaderProps {
   setQueryTodo: (queryTodo: string) => void;
   error: string | null;
   setError: (error: string | null) => void;
+  isInputDisabled: boolean;
 }
 
 export const TodoHeader: React.FC<TodoHeaderProps> = ({
@@ -11,14 +12,14 @@ export const TodoHeader: React.FC<TodoHeaderProps> = ({
   queryTodo,
   setQueryTodo,
   setError,
+  isInputDisabled,
 }) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const input = event.currentTarget.querySelector('input');
 
-    if (input && input.value.trim()) {
-      handleAddTodo(input.value.trim());
-      input.value = '';
+    if (queryTodo && queryTodo.trim()) {
+      handleAddTodo(queryTodo.trim());
+      setQueryTodo('');
     } else {
       setError('Title should not be empty');
     }
@@ -34,7 +35,7 @@ export const TodoHeader: React.FC<TodoHeaderProps> = ({
       />
 
       {/* Add a todo on form submit */}
-      <form onSubmit={() => handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <input
           data-cy="NewTodoField"
           type="text"
@@ -43,6 +44,7 @@ export const TodoHeader: React.FC<TodoHeaderProps> = ({
           value={queryTodo}
           onChange={event => setQueryTodo(event.target.value)}
           autoFocus
+          disabled={isInputDisabled}
         />
       </form>
     </header>

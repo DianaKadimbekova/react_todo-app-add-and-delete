@@ -4,13 +4,15 @@ import { Todo } from '../types/Todo';
 interface TodoItemProps {
   todo: Todo;
   handleDeleteTodo: (id: number) => void;
-  handleEditTodo: (todo: Todo) => void;
+  isDeleting: boolean;
+  loading?: boolean;
 }
 
 export const TodoItem: React.FC<TodoItemProps> = ({
   todo,
   handleDeleteTodo,
-  handleEditTodo,
+  isDeleting,
+  loading,
 }) => {
   return (
     <div>
@@ -25,9 +27,6 @@ export const TodoItem: React.FC<TodoItemProps> = ({
             type="checkbox"
             className="todo__status"
             checked={todo.completed}
-            onChange={() =>
-              handleEditTodo({ ...todo, completed: !todo.completed })
-            }
           />
         </label>
 
@@ -40,14 +39,17 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           className="todo__remove"
           data-cy="TodoDelete"
           onClick={() => handleDeleteTodo(todo.id)}
+          disabled={isDeleting}
         >
-          ×
+          {isDeleting ? '' : '×'}
         </button>
 
-        <div data-cy="TodoLoader" className="modal overlay">
-          <div className="modal-background has-background-white-ter" />
-          <div className="loader" />
-        </div>
+        {loading && (
+          <div data-cy="TodoLoader" className="modal overlay">
+            <div className="modal-background has-background-white-ter" />
+            <div className="loader" />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -21,6 +21,8 @@ export const App: React.FC<AppProp> = () => {
   const [queryTodo, setQueryTodo] = useState<string>('');
   const [filter, setFilter] = useState<'active' | 'all' | 'completed'>('all');
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
+  const [deletingTodoId, setDeletingTodoId] = useState<number | null>(null);
+  const [isInputDisabled, setIsInputDisabled] = useState(false);
   //#endregion//
 
   //#region HandleTodo//
@@ -49,10 +51,12 @@ export const App: React.FC<AppProp> = () => {
       });
 
       setTodos([...todos, newTodo]);
-      setQueryTodo('');
       setTempTodo(null);
     } catch (e) {
       setError('Unable to add a todo');
+      setTempTodo(null);
+    } finally {
+      setIsInputDisabled(false);
       setTempTodo(null);
     }
   };
@@ -63,6 +67,8 @@ export const App: React.FC<AppProp> = () => {
       setTodos(todos.filter(todo => todo.id !== todoId));
     } catch (e) {
       setError('Unable to delete a todo');
+    } finally {
+      setDeletingTodoId(null);
     }
   };
 
@@ -120,6 +126,7 @@ export const App: React.FC<AppProp> = () => {
 
       <div className="todoapp__content">
         <TodoHeader
+          isInputDisabled={isInputDisabled}
           handleAddTodo={handleAddTodo}
           setQueryTodo={setQueryTodo}
           queryTodo={queryTodo}
@@ -131,8 +138,9 @@ export const App: React.FC<AppProp> = () => {
         ) : (
           <TodoSection
             todos={filteredTodos}
-            handleDeleteTodo={() => handleDeleteTodo}
+            handleDeleteTodo={handleDeleteTodo}
             tempTodo={tempTodo}
+            deletingTodoId={deletingTodoId}
           />
         )}
         {!noTodo && (
