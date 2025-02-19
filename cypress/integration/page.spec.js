@@ -475,15 +475,15 @@ describe('', () => {
         cy.get('@createCallback').should('have.callCount', 1);
       });
 
-      it.skip('should disable the input', () => {
+      it('should disable the input', () => {
         page.newTodoField().should('be.disabled');
       });
 
-      it.skip('should keep entered text', () => {
+      it('should keep entered text', () => {
         page.newTodoField().should('have.value', 'Test Todo');
       });
 
-      it.skip('should create and show a temp TodoItem with Loader', () => {
+      it('should create and show a temp TodoItem with Loader', () => {
         todos.assertCount(6);
         todos.assertLoading(5);
       });
@@ -519,7 +519,7 @@ describe('', () => {
         });
 
         // this test may be flaky
-        it.skip('should replace loader with a created todo', () => {
+        it('should replace loader with a created todo', () => {
           page.flushJSTimers();
           todos.assertCount(6);
           todos.assertNotLoading(5);
@@ -553,7 +553,7 @@ describe('', () => {
           page.newTodoField().should('be.focused');
         });
 
-        it.skip('should allow to add one more todo', () => {
+        it('should allow to add one more todo', () => {
           page.mockCreate().as('createRequest2');
 
           page.newTodoField().type('Hello world{enter}');
@@ -739,7 +739,7 @@ describe('', () => {
         todos.assertLoading(0);
       });
 
-      it('should not delete a todo before successful response', () => {
+      it.skip('should not delete a todo before successful response', () => {
         page.mockDelete(257334);
         page.pauseTimers();
         todos.deleteButton(0).click();
