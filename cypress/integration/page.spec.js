@@ -475,7 +475,7 @@ describe('', () => {
         cy.get('@createCallback').should('have.callCount', 1);
       });
 
-      it.skip('should disable the input', () => {
+      it('should disable the input', () => {
         page.newTodoField().should('be.disabled');
       });
 
@@ -731,7 +731,7 @@ describe('', () => {
         cy.wait('@loadRequest');
       });
 
-      it.skip('should display a loader on the todo when the TodoDeleteButton is clicked', () => {
+      it('should display a loader on the todo when the TodoDeleteButton is clicked', () => {
         page.mockDelete(257334);
         page.pauseTimers();
         todos.deleteButton(0).click();
@@ -904,7 +904,7 @@ describe('', () => {
           todos.assertTitle(1, 'React');
         });
 
-        it.skip('should disable ClearCompleted button', () => {
+        it('should disable ClearCompleted button', () => {
           page.clearCompletedButton().should('be.disabled');
         });
 
@@ -929,12 +929,12 @@ describe('', () => {
           cy.wait('@deleteRequest3');
         });
 
-        it.skip('should show an error message if any of the group deletions fails', () => {
+        it('should show an error message if any of the group deletions fails', () => {
           errorMessage.assertVisible();
           errorMessage.assertText('Unable to delete a todo');
         });
 
-        it.skip('should remove todos with success responses and keep todos with errors', () => {
+        it('should remove todos with success responses and keep todos with errors', () => {
           todos.assertCount(3);
           todos.assertTitle(0, 'CSS');
           todos.assertTitle(1, 'TypeScript');

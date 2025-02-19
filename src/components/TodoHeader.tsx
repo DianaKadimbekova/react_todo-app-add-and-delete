@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 interface TodoHeaderProps {
   handleAddTodo: (title: string) => void;
   queryTodo: string;
@@ -14,6 +16,8 @@ export const TodoHeader: React.FC<TodoHeaderProps> = ({
   setError,
   isInputDisabled,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -23,6 +27,12 @@ export const TodoHeader: React.FC<TodoHeaderProps> = ({
       setError('Title should not be empty');
     }
   };
+
+  useEffect(() => {
+    if (!isInputDisabled && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isInputDisabled]);
 
   return (
     <header className="todoapp__header">
@@ -44,6 +54,7 @@ export const TodoHeader: React.FC<TodoHeaderProps> = ({
           onChange={event => setQueryTodo(event.target.value)}
           autoFocus
           disabled={isInputDisabled}
+          ref={inputRef}
         />
       </form>
     </header>

@@ -30,6 +30,8 @@ export const App: React.FC<AppProp> = () => {
   const handleAddTodo = async (title: string) => {
     const trimmedTitle = title.trim();
 
+    setIsInputDisabled(true);
+
     if (!trimmedTitle) {
       setError('Title should not be empty');
 
@@ -66,16 +68,11 @@ export const App: React.FC<AppProp> = () => {
     try {
       await deleteTodo(todoId);
       setTodos(todos.filter(todo => todo.id !== todoId));
-
-      const inputElement = document.querySelector('.todoapp__new-todo');
-
-      if (inputElement) {
-        inputElement.focus();
-      }
     } catch (e) {
       setError('Unable to delete a todo');
     } finally {
       setDeletingTodoId(null);
+      setIsInputDisabled(false);
     }
   };
 
@@ -85,14 +82,10 @@ export const App: React.FC<AppProp> = () => {
     try {
       await Promise.all(completedTodos.map(todo => deleteTodo(todo.id)));
       setTodos(todos.filter(todo => !todo.completed));
-
-      const inputElement = document.querySelector('.todoapp__new-todo');
-
-      if (inputElement) {
-        inputElement.focus();
-      }
     } catch (e) {
       setError('Unable to delete completed todos');
+    } finally {
+      setIsInputDisabled(false);
     }
   };
   //#endregion//
