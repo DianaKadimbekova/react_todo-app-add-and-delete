@@ -19,7 +19,6 @@ export const TodoHeader: React.FC<TodoHeaderProps> = ({
 
     if (queryTodo && queryTodo.trim()) {
       handleAddTodo(queryTodo.trim());
-      setQueryTodo('');
     } else {
       setError('Title should not be empty');
     }

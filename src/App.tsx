@@ -52,6 +52,8 @@ export const App: React.FC<AppProp> = () => {
 
       setTodos([...todos, newTodo]);
       setTempTodo(null);
+      setQueryTodo('');
+      // setIsInputDisabled(true);
     } catch (e) {
       setError('Unable to add a todo');
       setTempTodo(null);

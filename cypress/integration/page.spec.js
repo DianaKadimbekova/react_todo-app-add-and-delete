@@ -463,7 +463,7 @@ describe('', () => {
       });
     });
 
-    describe.skip('after form submition before response is received', () => {
+    describe('after form submition before response is received', () => {
       beforeEach(() => {
         page.mockCreate();
         page.pauseTimers();
@@ -475,7 +475,7 @@ describe('', () => {
         cy.get('@createCallback').should('have.callCount', 1);
       });
 
-      it('should disable the input', () => {
+      it.skip('should disable the input', () => {
         page.newTodoField().should('be.disabled');
       });
 
@@ -631,7 +631,7 @@ describe('', () => {
         page.newTodoField().should('not.be.disabled');
       });
 
-      it.skip('should keep the entered text on request fail', () => {
+      it('should keep the entered text on request fail', () => {
         page.newTodoField().should('have.value', 'Test Todo');
       });
 
@@ -648,7 +648,7 @@ describe('', () => {
         errorMessage.assertHidden();
       });
 
-      it.skip('should show an error message again on a next fail', () => {
+      it('should show an error message again on a next fail', () => {
         // to prevent Cypress from failing the test on uncaught exception
         cy.once('uncaught:exception', () => false);
 
@@ -661,7 +661,7 @@ describe('', () => {
         errorMessage.assertVisible();
       });
 
-      it.skip('should keep an error message for 3s after the last fail', () => {
+      it('should keep an error message for 3s after the last fail', () => {
         // to prevent Cypress from failing the test on uncaught exception
         cy.once('uncaught:exception', () => false);
 
@@ -679,7 +679,7 @@ describe('', () => {
         errorMessage.assertVisible();
       });
 
-      it.skip('should allow to add a todo', () => {
+      it('should allow to add a todo', () => {
         page.mockCreate().as('createRequest2');
         page.newTodoField().type('{enter}');
 
