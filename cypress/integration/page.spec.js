@@ -739,7 +739,7 @@ describe('', () => {
         todos.assertLoading(0);
       });
 
-      it.skip('should not delete a todo before successful response', () => {
+      it('should not delete a todo before successful response', () => {
         page.mockDelete(257334);
         page.pauseTimers();
         todos.deleteButton(0).click();
@@ -757,7 +757,7 @@ describe('', () => {
         todos.assertTitle(0, 'CSS');
       });
 
-      it.skip('should focus text field after todo deletion', () => {
+      it('should focus text field after todo deletion', () => {
         page.mockDelete(257334).as('deleteRequest');
 
         todos.deleteButton(0).click();
@@ -843,7 +843,7 @@ describe('', () => {
         page.todosCounter().should('not.exist');
       });
 
-      it.skip('should focus text field after todo deletion', () => {
+      it('should focus text field after todo deletion', () => {
         page.newTodoField().should('be.focused');
       });
     });
@@ -908,7 +908,7 @@ describe('', () => {
           page.clearCompletedButton().should('be.disabled');
         });
 
-        it.skip('should focus the text field', () => {
+        it('should focus the text field', () => {
           page.newTodoField().should('be.focused');
         });
       });

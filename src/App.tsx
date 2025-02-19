@@ -53,7 +53,6 @@ export const App: React.FC<AppProp> = () => {
       setTodos([...todos, newTodo]);
       setTempTodo(null);
       setQueryTodo('');
-      // setIsInputDisabled(true);
     } catch (e) {
       setError('Unable to add a todo');
       setTempTodo(null);
@@ -67,6 +66,12 @@ export const App: React.FC<AppProp> = () => {
     try {
       await deleteTodo(todoId);
       setTodos(todos.filter(todo => todo.id !== todoId));
+
+      const inputElement = document.querySelector('.todoapp__new-todo');
+
+      if (inputElement) {
+        inputElement.focus();
+      }
     } catch (e) {
       setError('Unable to delete a todo');
     } finally {
@@ -80,6 +85,12 @@ export const App: React.FC<AppProp> = () => {
     try {
       await Promise.all(completedTodos.map(todo => deleteTodo(todo.id)));
       setTodos(todos.filter(todo => !todo.completed));
+
+      const inputElement = document.querySelector('.todoapp__new-todo');
+
+      if (inputElement) {
+        inputElement.focus();
+      }
     } catch (e) {
       setError('Unable to delete completed todos');
     }
