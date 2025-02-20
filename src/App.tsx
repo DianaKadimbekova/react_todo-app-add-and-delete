@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { UserWarning } from './UserWarning';
 import { addTodo, deleteTodo, getTodos, USER_ID } from './api/todos';
 import { TodoError } from './components/TodoError';
@@ -24,6 +24,8 @@ export const App: React.FC<AppProp> = () => {
   const [deletingTodoId, setDeletingTodoId] = useState<number | null>(null);
   const [isInputDisabled, setIsInputDisabled] = useState(false);
   //#endregion//
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   //#region HandleTodo//
 
@@ -65,6 +67,7 @@ export const App: React.FC<AppProp> = () => {
   };
 
   const handleDeleteTodo = async (todoId: number) => {
+    setDeletingTodoId(todoId);
     try {
       await deleteTodo(todoId);
       setTodos(todos.filter(todo => todo.id !== todoId));
@@ -73,6 +76,10 @@ export const App: React.FC<AppProp> = () => {
     } finally {
       setDeletingTodoId(null);
       setIsInputDisabled(false);
+
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
   };
 

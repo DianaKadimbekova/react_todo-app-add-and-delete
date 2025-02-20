@@ -857,7 +857,7 @@ describe('', () => {
         cy.wait('@loadRequest');
       });
 
-      it.skip('should not have active ClearCompleted button', () => {
+      it('should not have active ClearCompleted button', () => {
         page.clearCompletedButton().should('be.disabled');
       });
     });
