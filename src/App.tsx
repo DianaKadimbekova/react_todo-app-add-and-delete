@@ -145,6 +145,7 @@ export const App: React.FC<AppProp> = () => {
           queryTodo={queryTodo}
           error={error}
           setError={setError}
+          inputRef={inputRef}
         />
         {loading ? (
           <div></div>

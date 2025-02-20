@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 interface TodoHeaderProps {
   handleAddTodo: (title: string) => void;
@@ -7,6 +7,7 @@ interface TodoHeaderProps {
   error: string | null;
   setError: (error: string | null) => void;
   isInputDisabled: boolean;
+  inputRef: React.RefObject<HTMLInputElement>;
 }
 
 export const TodoHeader: React.FC<TodoHeaderProps> = ({
@@ -15,8 +16,9 @@ export const TodoHeader: React.FC<TodoHeaderProps> = ({
   setQueryTodo,
   setError,
   isInputDisabled,
+  inputRef,
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  // const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
