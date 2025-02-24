@@ -14,7 +14,6 @@ interface AppProp {
 }
 
 export const App: React.FC<AppProp> = () => {
-  //#region State//
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,12 +22,8 @@ export const App: React.FC<AppProp> = () => {
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
   const [deletingTodoId, setDeletingTodoId] = useState<number | null>(null);
   const [isInputDisabled, setIsInputDisabled] = useState(false);
-  // const [processingTodoIds, setProcessingTodoIds] = useState<number[]>([]);
-  //#endregion//
 
   const inputRef = useRef<HTMLInputElement>(null);
-
-  //#region HandleTodo//
 
   const handleAddTodo = async (title: string) => {
     const trimmedTitle = title.trim();
@@ -88,14 +83,21 @@ export const App: React.FC<AppProp> = () => {
     const completedTodos = todos.filter(todo => todo.completed);
 
     try {
-      const deletePromise = completedTodos.map(todo =>
-        deleteTodo(todo.id).catch(() => {
-          throw new Error('Unable to delete a todo');
-        }),
-      );
+      await Promise.allSettled(
+        completedTodos.map(todo => deleteTodo(todo.id).then(() => todo)),
+      ).then(values => {
+        values.map(value1 => {
+          if (value1.status === 'rejected') {
+            setError('Unable to delete a todo');
+          } else {
+            setTodos(prevTodos => {
+              const todoID = value1.value as Todo;
 
-      await Promise.all(deletePromise);
-      setTodos(todos.filter(todo => !todo.completed));
+              return prevTodos.filter(todo1 => todo1.id !== todoID.id);
+            });
+          }
+        });
+      });
     } catch (e) {
       setError('Unable to delete todos');
     } finally {
@@ -105,9 +107,7 @@ export const App: React.FC<AppProp> = () => {
       }
     }
   };
-  //#endregion//
 
-  //#region filteredTodos//
   const filteredTodos = todos.filter(todo => {
     if (filter === 'active') {
       return !todo.completed;
@@ -121,7 +121,6 @@ export const App: React.FC<AppProp> = () => {
   });
 
   const todoLeft = todos.filter(todo => !todo.completed).length;
-  //#endregion//
 
   const noTodo = todos.length === 0;
 

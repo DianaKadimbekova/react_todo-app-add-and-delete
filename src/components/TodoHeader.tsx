@@ -18,8 +18,6 @@ export const TodoHeader: React.FC<TodoHeaderProps> = ({
   isInputDisabled,
   inputRef,
 }) => {
-  // const inputRef = useRef<HTMLInputElement>(null);
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
