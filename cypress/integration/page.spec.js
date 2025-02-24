@@ -857,7 +857,7 @@ describe('', () => {
         cy.wait('@loadRequest');
       });
 
-      it.skip('should not have active ClearCompleted button', () => {
+      it('should not have active ClearCompleted button', () => {
         page.clearCompletedButton().should('be.disabled');
       });
     });
@@ -904,11 +904,11 @@ describe('', () => {
           todos.assertTitle(1, 'React');
         });
 
-        it.skip('should disable ClearCompleted button', () => {
+        it('should disable ClearCompleted button', () => {
           page.clearCompletedButton().should('be.disabled');
         });
 
-        it.skip('should focus the text field', () => {
+        it('should focus the text field', () => {
           page.newTodoField().should('be.focused');
         });
       });
@@ -929,12 +929,12 @@ describe('', () => {
           cy.wait('@deleteRequest3');
         });
 
-        it.skip('should show an error message if any of the group deletions fails', () => {
+        it('should show an error message if any of the group deletions fails', () => {
           errorMessage.assertVisible();
           errorMessage.assertText('Unable to delete a todo');
         });
 
-        it.skip('should remove todos with success responses and keep todos with errors', () => {
+        it('should remove todos with success responses and keep todos with errors', () => {
           todos.assertCount(3);
           todos.assertTitle(0, 'CSS');
           todos.assertTitle(1, 'TypeScript');

@@ -23,6 +23,7 @@ export const App: React.FC<AppProp> = () => {
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
   const [deletingTodoId, setDeletingTodoId] = useState<number | null>(null);
   const [isInputDisabled, setIsInputDisabled] = useState(false);
+  // const [processingTodoIds, setProcessingTodoIds] = useState<number[]>([]);
   //#endregion//
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -87,12 +88,21 @@ export const App: React.FC<AppProp> = () => {
     const completedTodos = todos.filter(todo => todo.completed);
 
     try {
-      await Promise.all(completedTodos.map(todo => deleteTodo(todo.id)));
+      const deletePromise = completedTodos.map(todo =>
+        deleteTodo(todo.id).catch(() => {
+          throw new Error('Unable to delete a todo');
+        }),
+      );
+
+      await Promise.all(deletePromise);
       setTodos(todos.filter(todo => !todo.completed));
     } catch (e) {
-      setError('Unable to delete completed todos');
+      setError('Unable to delete todos');
     } finally {
       setIsInputDisabled(false);
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
   };
   //#endregion//

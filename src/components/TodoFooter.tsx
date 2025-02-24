@@ -16,6 +16,8 @@ export const TodoFooter: React.FC<TodoErrorProps> = ({
   setFilter,
   todoLeft,
 }) => {
+  const handleCompletedTodos = todos.some(todo => todo.completed);
+
   return (
     todos.length > 0 && (
       <footer className="todoapp__footer" data-cy="Footer">
@@ -52,16 +54,15 @@ export const TodoFooter: React.FC<TodoErrorProps> = ({
           </a>
         </nav>
 
-        {todos.some(todo => todo.completed) && (
-          <button
-            type="button"
-            className="todoapp__clear-completed"
-            data-cy="ClearCompletedButton"
-            onClick={handleClearCompleted}
-          >
-            Clear completed
-          </button>
-        )}
+        <button
+          type="button"
+          className="todoapp__clear-completed"
+          data-cy="ClearCompletedButton"
+          onClick={handleClearCompleted}
+          disabled={!handleCompletedTodos}
+        >
+          Clear completed
+        </button>
       </footer>
     )
   );
