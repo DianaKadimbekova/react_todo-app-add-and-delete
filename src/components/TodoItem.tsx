@@ -15,6 +15,8 @@ export const TodoItem: React.FC<TodoItemProps> = ({
   isDeleting,
   loading,
 }) => {
+  const { completed, title } = todo;
+
   return (
     <div>
       <div
@@ -22,17 +24,17 @@ export const TodoItem: React.FC<TodoItemProps> = ({
         data-cy="Todo"
         className={`todo ${todo.completed ? 'completed' : ''}`}
       >
-        <label className="todo__status-label" aria-label="я не знаю что тут">
+        <label className="todo__status-label" aria-label="status">
           <input
             data-cy="TodoStatus"
             type="checkbox"
             className="todo__status"
-            checked={todo.completed}
+            checked={completed}
           />
         </label>
 
         <span data-cy="TodoTitle" className="todo__title">
-          {todo.title}
+          {title}
         </span>
 
         <button
@@ -47,8 +49,9 @@ export const TodoItem: React.FC<TodoItemProps> = ({
 
         <div
           data-cy="TodoLoader"
-          // eslint-disable-next-line
-          className={classNames('modal overlay', { 'is-active': loading || isDeleting })}
+          className={classNames('modal overlay', {
+            'is-active': loading || isDeleting,
+          })}
         >
           <div className="modal-background has-background-white-ter" />
           <div className="loader" />

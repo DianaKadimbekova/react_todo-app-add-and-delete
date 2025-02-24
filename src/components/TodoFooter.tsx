@@ -1,12 +1,14 @@
 import React from 'react';
 import { Todo } from '../types/Todo';
+import { Filter } from '../App';
+import classNames from 'classnames';
 
 interface TodoErrorProps {
   todoLeft: number;
   todos: Todo[];
   handleClearCompleted: () => void;
-  filter: 'all' | 'active' | 'completed';
-  setFilter: (filter: 'all' | 'active' | 'completed') => void;
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
 }
 
 export const TodoFooter: React.FC<TodoErrorProps> = ({
@@ -17,6 +19,7 @@ export const TodoFooter: React.FC<TodoErrorProps> = ({
   todoLeft,
 }) => {
   const handleCompletedTodos = todos.some(todo => todo.completed);
+  const filters = Object.values(Filter);
 
   return (
     todos.length > 0 && (
@@ -26,32 +29,19 @@ export const TodoFooter: React.FC<TodoErrorProps> = ({
         </span>
 
         <nav className="filter" data-cy="Filter">
-          <a
-            href="#/"
-            className={`filter__link ${filter === 'all' ? 'selected' : ''}`}
-            data-cy="FilterLinkAll"
-            onClick={() => setFilter('all')}
-          >
-            All
-          </a>
-
-          <a
-            href="#/active"
-            className={`filter__link ${filter === 'active' ? 'selected' : ''}`}
-            data-cy="FilterLinkActive"
-            onClick={() => setFilter('active')}
-          >
-            Active
-          </a>
-
-          <a
-            href="#/completed"
-            className={`filter__link ${filter === 'completed' ? 'selected' : ''}`}
-            data-cy="FilterLinkCompleted"
-            onClick={() => setFilter('completed')}
-          >
-            Completed
-          </a>
+          {filters.map(type => (
+            <a
+              key={type}
+              href={`#/${type === Filter.All ? '' : type.toLowerCase()}`}
+              className={classNames('filter__link', {
+                selected: filter === type,
+              })}
+              data-cy={`FilterLink${type}`}
+              onClick={() => setFilter(type)}
+            >
+              {type}
+            </a>
+          ))}
         </nav>
 
         <button

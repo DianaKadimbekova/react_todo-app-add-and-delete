@@ -13,12 +13,18 @@ interface AppProp {
   todoId: number;
 }
 
+export enum Filter {
+  All = 'All',
+  Active = 'Active',
+  Completed = 'Completed',
+}
+
 export const App: React.FC<AppProp> = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [queryTodo, setQueryTodo] = useState<string>('');
-  const [filter, setFilter] = useState<'active' | 'all' | 'completed'>('all');
+  const [filter, setFilter] = useState<Filter>(Filter.All);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
   const [deletingTodoId, setDeletingTodoId] = useState<number | null>(null);
   const [isInputDisabled, setIsInputDisabled] = useState(false);
@@ -109,15 +115,14 @@ export const App: React.FC<AppProp> = () => {
   };
 
   const filteredTodos = todos.filter(todo => {
-    if (filter === 'active') {
-      return !todo.completed;
+    switch (filter) {
+      case Filter.Active:
+        return !todo.completed;
+      case Filter.Completed:
+        return todo.completed;
+      default:
+        return true;
     }
-
-    if (filter === 'completed') {
-      return todo.completed;
-    }
-
-    return true;
   });
 
   const todoLeft = todos.filter(todo => !todo.completed).length;
@@ -133,6 +138,8 @@ export const App: React.FC<AppProp> = () => {
         })
         .catch(() => {
           setError('Unable to load todos');
+        })
+        .finally(() => {
           setLoading(false);
         });
     }
